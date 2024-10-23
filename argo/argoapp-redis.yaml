@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+
+kind: Application
+
+metadata:
+  name: redis # https://artifacthub.io/packages/helm/bitnami/redis
+  namespace: argo
+
+spec:
+  project: default
+
+  source:
+    path: ''
+    repoURL: 'oci://registry-1.docker.io/bitnamicharts/redis'
+    targetRevision: '20.2.1'
+    chart: redis
+
+    helm:
+      #Notice: Helm way to pass parameters
+      values: | #TODO
+        global:
+          redis:
+            password: admin
+
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
